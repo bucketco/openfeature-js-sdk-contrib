@@ -1,0 +1,89 @@
+{
+  "name": "providers-bucket-node",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/providers/bucket-node/src",
+  "projectType": "library",
+  "targets": {
+    "publish": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm run publish-if-not-exists",
+        "cwd": "dist/libs/providers/bucket-node"
+      },
+      "dependsOn": [
+        {
+          "projects": "self",
+          "target": "package"
+        }
+      ]
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "options": {
+        "lintFilePatterns": [
+          "libs/providers/bucket-node/**/*.ts",
+          "libs/providers/bucket-node/package.json"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
+      "options": {
+        "jestConfig": "libs/providers/bucket-node/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "package": {
+      "executor": "@nx/rollup:rollup",
+      "outputs": [
+        "{options.outputPath}"
+      ],
+      "options": {
+        "project": "libs/providers/bucket-node/package.json",
+        "outputPath": "dist/libs/providers/bucket-node",
+        "entryFile": "libs/providers/bucket-node/src/index.ts",
+        "tsConfig": "libs/providers/bucket-node/tsconfig.lib.json",
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "updateBuildableProjectDepsInPackageJson": true,
+        "compiler": "tsc",
+        "generateExportsField": true,
+        "umdName": "bucket-node",
+        "external": "all",
+        "format": [
+          "cjs",
+          "esm"
+        ],
+        "assets": [
+          {
+            "glob": "package.json",
+            "input": "./assets",
+            "output": "./src/"
+          },
+          {
+            "glob": "LICENSE",
+            "input": "./",
+            "output": "./"
+          },
+          {
+            "glob": "README.md",
+            "input": "./libs/providers/bucket-node",
+            "output": "./"
+          }
+        ]
+      }
+    }
+  },
+  "tags": []
+}
